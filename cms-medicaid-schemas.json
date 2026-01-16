@@ -1,0 +1,1014 @@
+{
+  "catalog": {
+    "@context": "https://project-open-data.cio.gov/v1.1/schema/catalog.jsonld",
+    "@id": "http://dkan/data.json",
+    "@type": "dcat:Catalog",
+    "conformsTo": "https://project-open-data.cio.gov/v1.1/schema",
+    "describedBy": "https://project-open-data.cio.gov/v1.1/schema/catalog.json",
+    "dataset": []
+  },
+  "dataset": {
+    "id": "http://dkan/api/v1/schema/dataset",
+    "title": "Project Open Data Dataset",
+    "description": "The metadata format for all federal open data. Validates a single JSON object entry (as opposed to entire Data.json catalog).",
+    "type": "object",
+    "required": [
+      "title",
+      "description",
+      "identifier",
+      "accessLevel",
+      "modified",
+      "keyword"
+    ],
+    "properties": {
+      "@type": {
+        "title": "Metadata Context",
+        "type": "string",
+        "description": "IRI for the JSON-LD data type. This should be dcat:Dataset for each Dataset.",
+        "default": "dcat:Dataset"
+      },
+      "title": {
+        "title": "Title",
+        "description": "Human-readable name of the asset. Should be in plain English and include sufficient detail to facilitate search and discovery.",
+        "type": "string",
+        "minLength": 1
+      },
+      "identifier": {
+        "title": "Unique Identifier",
+        "description": "A unique identifier for the dataset or API as maintained within an Agency catalog or database.",
+        "type": "string",
+        "minLength": 1
+      },
+      "description": {
+        "title": "Description",
+        "description": "Human-readable description (e.g., an abstract) with sufficient detail to enable a user to quickly understand whether the asset is of interest.",
+        "type": "string",
+        "minLength": 1
+      },
+      "accessLevel": {
+        "description": "The degree to which this dataset could be made publicly-available, regardless of whether it has been made available. Choices: public (Data asset is or could be made publicly available to all without restrictions), restricted public (Data asset is available under certain use restrictions), or non-public (Data asset is not available to members of the public).",
+        "title": "Public Access Level",
+        "type": "string",
+        "enum": [
+          "public",
+          "restricted public",
+          "non-public"
+        ],
+        "default": "public"
+      },
+      "accrualPeriodicity": {
+        "title": "Frequency",
+        "description": "Frequency with which dataset is published.",
+        "type": "string",
+        "enum": [
+          "R/P10Y",
+          "R/P4Y",
+          "R/P1Y",
+          "R/P2M",
+          "R/P3.5D",
+          "R/P1D",
+          "R/P2W",
+          "R/P6M",
+          "R/P2Y",
+          "R/P3Y",
+          "R/P0.33W",
+          "R/P0.33M",
+          "R/PT1S",
+          "R/P1M",
+          "R/P3M",
+          "R/P0.5M",
+          "R/P4M",
+          "R/P1W",
+          "R/PT1H",
+          "irregular"
+        ],
+        "enumNames": [
+          "Decennial",
+          "Quadrennial",
+          "Annual",
+          "Bimonthly",
+          "Semiweekly",
+          "Daily",
+          "Biweekly",
+          "Semiannual",
+          "Biennial",
+          "Triennial",
+          "Three times a week",
+          "Three times a month",
+          "Continuously updated",
+          "Monthly",
+          "Quarterly",
+          "Semimonthly",
+          "Three times a year",
+          "Weekly",
+          "Hourly",
+          "Irregular"
+        ]
+      },
+      "describedBy": {
+        "title": "Data Dictionary",
+        "description": "URL to the data dictionary for the dataset or API. Note that documentation other than a data dictionary can be referenced using Related Documents as shown in the expanded fields.",
+        "type": "string",
+        "format": "uri"
+      },
+      "describedByType": {
+        "title": "Data Dictionary Type",
+        "description": "The machine-readable file format (IANA Media Type or MIME Type) of the distribution’s describedBy URL.",
+        "type": "string"
+      },
+      "issued": {
+        "title": "Release Date",
+        "description": "Date of formal issuance.",
+        "type": "string"
+      },
+      "modified": {
+        "title": "Last Update",
+        "description": "Most recent date on which the dataset was changed, updated or modified.",
+        "type": "string"
+      },
+      "license": {
+        "title": "License",
+        "description": "The license dataset or API is published with. See <a href=\"https://resources.data.gov/open-licenses/\">Open Licenses</a> for more information.",
+        "type": "string",
+        "format": "uri",
+        "default": "https://www.usa.gov/publicdomain/label/1.0/"
+      },
+      "spatial": {
+        "title": "Spatial",
+        "description": "The <a href=\"https://project-open-data.cio.gov/v1.1/schema/#spatial\">spatial coverage</a> of the dataset. Could include a spatial region like a bounding box or a named place.",
+        "type": "string",
+        "minLength": 1
+      },
+      "temporal": {
+        "title": "Temporal",
+        "description": "The <a href=\"https://project-open-data.cio.gov/v1.1/schema/#temporal\">start and end dates</a> for which the dataset is applicable, separated by a \"/\" (i.e., 2000-01-15T00:45:00Z/2010-01-15T00:06:00Z).",
+        "type": "string"
+      },
+      "isPartOf": {
+        "title": "Collection",
+        "description": "The collection of which the dataset is a subset.",
+        "type": "string",
+        "minLength": 1
+      },
+      "publisher": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "id": "https://project-open-data.cio.gov/v1.1/schema/organization.json#",
+        "title": "Organization",
+        "description": "A Dataset Publisher Organization.",
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "@type": {
+            "title": "Metadata Context",
+            "description": "IRI for the JSON-LD data type. This should be org:Organization for each publisher",
+            "type": "string",
+            "default": "org:Organization"
+          },
+          "name": {
+            "title": "Publisher Name",
+            "description": "",
+            "type": "string",
+            "minLength": 1
+          },
+          "subOrganizationOf": {
+            "title": "Parent Organization",
+            "type": "string"
+          }
+        }
+      },
+      "contactPoint": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "id": "https://project-open-data.cio.gov/v1.1/schema/vcard.json#",
+        "title": "Project Open Data ContactPoint vCard",
+        "description": "A Dataset ContactPoint as a vCard object.",
+        "type": "object",
+        "required": [
+          "fn",
+          "hasEmail"
+        ],
+        "properties": {
+          "@type": {
+            "title": "Metadata Context",
+            "description": "IRI for the JSON-LD data type. This should be vcard:Contact for contactPoint.",
+            "enum": [
+              "vcard:Contact"
+            ],
+            "type": "string"
+          },
+          "fn": {
+            "title": "Contact Name",
+            "description": "A full formatted name, e.g. Firstname Lastname.",
+            "type": "string",
+            "minLength": 1
+          },
+          "hasEmail": {
+            "title": "Email",
+            "description": "Email address for the contact name.",
+            "pattern": "^mailto:[\\w\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:.-]+@[\\w.-]+\\.[\\w.-]+?$|[\\w\\_\\~\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=\\:.-]+@[\\w.-]+\\.[\\w.-]+?$",
+            "type": "string"
+          }
+        }
+      },
+      "theme": {
+        "title": "Category",
+        "description": "Main thematic category of the dataset.",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "title": "Category",
+          "minLength": 1
+        },
+        "uniqueItems": true
+      },
+      "keyword": {
+        "title": "Tags",
+        "description": "Tags (or keywords) help users discover your dataset; please include terms that would be used by technical and non-technical users.",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "title": "Tag",
+          "minLength": 1
+        },
+        "minItems": 1
+      },
+      "distribution": {
+        "title": "Distribution",
+        "description": "A distribution is a container for the metadata specific to the data resource being shared. Each distribution should contain one <strong>Access URL</strong> or <strong>Download URL</strong>. When providing a Download URL, also include the format of the file. A distribution containing a Download URL to a csv or tsv file will generate queues that will import the data into a database table, this is referred to as a datastore. The datastore provides an API endpoint for users to run queries against the data.",
+        "type": "array",
+        "items": {
+          "title": "Data File",
+          "type": "object",
+          "properties": {
+            "@type": {
+              "title": "Metadata Context",
+              "description": "IRI for the JSON-LD data type. This should be dcat:Distribution for each Distribution.",
+              "default": "dcat:Distribution",
+              "type": "string",
+              "readOnly": true
+            },
+            "title": {
+              "title": "Title",
+              "description": "Human-readable name of the file.",
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "title": "Description",
+              "description": "Human-readable description of the file.",
+              "type": "string",
+              "minLength": 1
+            },
+            "format": {
+              "title": "Format",
+              "description": "A human-readable description of the file format of a distribution (i.e. csv, pdf, kml, etc.).",
+              "type": "string",
+              "examples": [
+                "arcgis",
+                "csv",
+                "esri rest",
+                "geojson",
+                "json",
+                "kml",
+                "pdf",
+                "tsv",
+                "xls",
+                "xlsx",
+                "zip"
+              ]
+            },
+            "mediaType": {
+              "title": "Media Type",
+              "description": "The machine-readable file format (<a href=\"https://www.iana.org/assignments/media-types/media-types.xhtml\">IANA Media Type or MIME Type</a>) of the distribution’s downloadURL.",
+              "type": "string"
+            },
+            "downloadURL": {
+              "title": "Download URL",
+              "description": "URL providing direct access to a downloadable file of a dataset.",
+              "type": "string",
+              "format": "uri"
+            },
+            "accessURL": {
+              "title": "Access URL",
+              "description": "URL providing indirect access to a dataset.",
+              "type": "string",
+              "format": "uri"
+            },
+            "conformsTo": {
+              "title": "Data Standard",
+              "description": "URI used to identify a standardized specification the distribution conforms to.",
+              "type": "string",
+              "format": "uri"
+            },
+            "describedBy": {
+              "title": "Data Dictionary",
+              "description": "URL to the data dictionary for the distribution found at the downloadURL.",
+              "type": "string"
+            },
+            "describedByType": {
+              "title": "Data Dictionary Type",
+              "description": "The machine-readable file format (IANA Media Type or MIME Type) of the distribution’s describedBy URL.",
+              "pattern": "^[a-z\\/\\.\\+]+?$",
+              "type": "string"
+            }
+          },
+          "uniqueItems": true
+        },
+        "minItems": 1
+      },
+      "references": {
+        "title": "Related Documents",
+        "description": "Related documents such as technical information about a dataset, developer documentation, etc.",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "bureauCode": {
+        "title": "Bureau Code",
+        "description": "Federal agencies, combined agency and bureau code from <a href=\"https://resources.data.gov/schemas/dcat-us/v1.1/omb_bureau_codes.csv\">OMB Circular A-11, Appendix C</a> in the format of <code>015:010</code>.",
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      },
+      "programCode": {
+        "title": "Program Code",
+        "description": "Federal agencies, list the primary program related to this data asset, from the <a href=\"https://resources.data.gov/schemas/dcat-us/v1.1/FederalProgramInventory_FY13_MachineReadable_091613.csv\">Federal Program Inventory</a>. Use the format of <code>015:001</code>",
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      }
+    }
+  },
+  "dataset.ui": {
+    "@type": {
+      "ui:options": {
+        "widget": "hidden"
+      }
+    },
+    "title": {
+      "ui:options": {
+        "description": "Name of the asset, in plain language. Include sufficient detail to facilitate search and discovery."
+      }
+    },
+    "identifier": {
+      "ui:options": {
+        "widget": "dkan_uuid"
+      }
+    },
+    "description": {
+      "ui:options": {
+        "widget": "textarea",
+        "rows": 5,
+        "description": "Description (e.g., an abstract) with sufficient detail to enable a user to quickly understand whether the asset is of interest."
+      }
+    },
+    "contactPoint": {
+      "properties": {
+        "@type": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        }
+      }
+    },
+    "accessLevel": {
+      "ui:options": {
+        "description": "This refers to how the data can be accessed."
+      }
+    },
+    "spatial": {
+      "ui:options": {
+        "widget": "textarea",
+        "rows": 5,
+        "title": "Relevant Location",
+        "description": "If your dataset has a spatial component, please provide location such as place name or latitude/longitude pairs."
+      }
+    },
+    "temporal": {
+      "ui:options": {
+        "description": "The <a href=\"https://project-open-data.cio.gov/v1.1/schema/#temporal\">start and end dates</a> for which the dataset is applicable.",
+        "widget": "date_range"
+      }
+    },
+    "isPartOf": {
+      "ui:options": {
+        "widget": "hidden"
+      }
+    },
+    "publisher": {
+      "ui:options": {
+        "widget": "list",
+        "type": "autocomplete",
+        "allowCreate": "true",
+        "titleProperty": "name",
+        "source": {
+          "metastoreSchema": "publisher"
+        }
+      },
+      "properties": {
+        "@type": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        },
+        "subOrganizationOf": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        }
+      }
+    },
+    "license": {
+      "ui:options": {
+        "widget": "list",
+        "type": "select_other",
+        "other_type": "url",
+        "source": {
+          "enum": [
+            "https://www.usa.gov/publicdomain/label/1.0/",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by-sa/4.0/",
+            "https://creativecommons.org/publicdomain/zero/1.0/",
+            "https://creativecommons.org/licenses/by-nc/2.5/",
+            "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+            "https://www.gnu.org/licenses/fdl.html",
+            "https://opendatacommons.org/licenses/by/1.0/",
+            "https://opendatacommons.org/licenses/odbl/1.0/",
+            "http://opendefinition.org/licenses/odc-pddl/",
+            "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/"
+          ],
+          "enumNames": [
+            "U.S. Government Works",
+            "Creative Commons Attribution",
+            "Creative Commons Attribution Share-Alike",
+            "Creative Commons CCZero",
+            "Creative Commons Non-Commercial (2.5)",
+            "Attribution NonCommercial NoDerivatives 4.0 International",
+            "GNU Free Documentation License",
+            "Open Data Commons Attribution License",
+            "Open Data Commons Open Database License (ODbL)",
+            "Open Data Commons Public Domain Dedication and Licence (PDDL)",
+            "UK Open Government Licence (OGL)"
+          ]
+        }
+      }
+    },
+    "distribution": {
+      "ui:options": {
+        "description": "A distribution is a container for the metadata specific to the data resource being shared. Each distribution should contain one <strong>Access URL</strong> or <strong>Download URL</strong>. When providing a Download URL, also include the format of the file. A distribution containing a Download URL to a csv or tsv file will generate queues that will import the data into a database table, this is referred to as a datastore. The datastore provides an API endpoint for users to run queries against the data."
+      },
+      "items": {
+        "@type": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        },
+        "title": {
+          "ui:options": {
+            "title": "File Title",
+            "description": ""
+          }
+        },
+        "mediaType": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        },
+        "description": {
+          "ui:options": {
+            "widget": "textarea",
+            "rows": 5,
+            "title": "File Description",
+            "description": ""
+          }
+        },
+        "format": {
+          "ui:options": {
+            "title": "File Format",
+            "widget": "list",
+            "type": "select",
+            "other_type": "textfield",
+            "description": "CSV files must be encoded in UTF-8 format to be imported correctly. UTF-8 encoding is an established standard that provides optimal compatibility between applications and operating systems. Note that Excel provides a <strong>CSV UTF-8</strong> option when saving data files.",
+            "source": {
+              "enum": [
+                "",
+                "arcgis",
+                "csv",
+                "esri rest",
+                "geojson",
+                "json",
+                "kml",
+                "pdf",
+                "tsv",
+                "xls",
+                "xlsx",
+                "zip"
+              ]
+            }
+          }
+        },
+        "downloadURL": {
+          "ui:options": {
+            "widget": "upload_or_link",
+            "extensions": "csv html xls json xlsx doc docx rdf txt jpg png gif tiff pdf odf ods odt tsv tab geojson zip kml kmz shp",
+            "progress_indicator": "bar",
+            "description": "URL providing direct access to a downloadable file."
+          }
+        },
+        "accessURL": {
+          "ui:options": {
+            "description": "URL providing indirect access to the data, for example via API or a graphical interface."
+          }
+        },
+        "describedBy": {
+          "ui:options": {
+            "description": "URL to the data dictionary for the file found at the Download URL."
+          }
+        },
+        "describedByType": {
+          "ui:options": {
+            "description": "The machine-readable file format (IANA Media Type or MIME Type) of the distribution’s Data Dictionary URL."
+          }
+        }
+      }
+    },
+    "references": {
+      "items": {
+        "ui:options": {
+          "placeholder": "http://"
+        }
+      }
+    },
+    "issued": {
+      "ui:options": {
+        "widget": "flexible_datetime"
+      }
+    },
+    "modified": {
+      "ui:options": {
+        "widget": "flexible_datetime",
+        "timeRequired": false,
+        "placeholder": "YYYY-MM-DD"
+      }
+    },
+    "describedBy": {
+      "ui:options": {
+        "placeholder": "http://"
+      }
+    },
+    "theme": {
+      "ui:options": {
+        "title": "Topics",
+        "hideActions": "true",
+        "child": "theme"
+      },
+      "items": {
+        "ui:options": {
+          "title": "Topic",
+          "widget": "list",
+          "type": "autocomplete",
+          "allowCreate": "true",
+          "multiple": "true",
+          "source": {
+            "metastoreSchema": "theme"
+          }
+        }
+      }
+    },
+    "keyword": {
+      "ui:options": {
+        "hideActions": "true",
+        "child": "keyword"
+      },
+      "items": {
+        "ui:options": {
+          "widget": "list",
+          "type": "autocomplete",
+          "allowCreate": "true",
+          "multiple": "true",
+          "source": {
+            "metastoreSchema": "keyword"
+          }
+        }
+      }
+    },
+    "bureauCode": {
+      "ui:options": {
+        "hideActions": "true",
+        "child": "bureauCode"
+      },
+      "items": {
+        "ui:options": {
+          "widget": "list",
+          "type": "select",
+          "source": {
+            "enum": [
+              "009:38",
+              "009:00"
+            ]
+          }
+        }
+      }
+    },
+    "programCode": {
+      "ui:options": {
+        "hideActions": "true",
+        "child": "programCode"
+      },
+      "items": {
+        "ui:options": {
+          "widget": "list",
+          "type": "select",
+          "source": {
+            "enum": [
+              "009:076",
+              "009:000"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "publisher": {
+    "title": "Publisher",
+    "description": "A Dataset Publisher Organization.",
+    "type": "object",
+    "required": [
+      "identifier",
+      "data"
+    ],
+    "properties": {
+      "identifier": {
+        "title": "Identifier",
+        "type": "string"
+      },
+      "data": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "id": "https://project-open-data.cio.gov/v1.1/schema/organization.json#",
+        "title": "Organization",
+        "description": "A Dataset Publisher Organization.",
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "@type": {
+            "title": "Metadata Context",
+            "description": "IRI for the JSON-LD data type. This should be org:Organization for each publisher",
+            "type": "string",
+            "default": "org:Organization"
+          },
+          "name": {
+            "title": "Publisher Name",
+            "description": "",
+            "type": "string",
+            "minLength": 1
+          },
+          "subOrganizationOf": {
+            "title": "Parent Organization",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "publisher.ui": {
+    "identifier": {
+      "ui:options": {
+        "widget": "hidden"
+      }
+    },
+    "data": {
+      "properties": {
+        "@type": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        }
+      }
+    }
+  },
+  "distribution": {
+    "title": "Distribution",
+    "description": "A container for the array of Distribution objects (data files).",
+    "type": "object",
+    "required": [
+      "identifier",
+      "data"
+    ],
+    "properties": {
+      "identifier": {
+        "title": "Identifier",
+        "type": "string"
+      },
+      "data": {
+        "title": "Project Open Data Distribution",
+        "type": "object",
+        "properties": {
+          "@type": {
+            "title": "Metadata Context",
+            "description": "IRI for the JSON-LD data type. This should be dcat:Distribution for each Distribution.",
+            "default": "dcat:Distribution",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "description": "Human-readable name of the distribution.",
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "description": "Human-readable description of the distribution.",
+            "type": "string",
+            "minLength": 1
+          },
+          "format": {
+            "title": "Format",
+            "description": "A human-readable description of the file format of a distribution (i.e. csv, pdf, kml, etc.).",
+            "type": "string",
+            "examples": [
+              "",
+              "arcgis",
+              "csv",
+              "esri rest",
+              "geojson",
+              "json",
+              "kml",
+              "pdf",
+              "tsv",
+              "xls",
+              "xlsx",
+              "zip"
+            ]
+          },
+          "mediaType": {
+            "title": "Media Type",
+            "description": "The machine-readable file format (<a href=\"https://www.iana.org/assignments/media-types/media-types.xhtml\">IANA Media Type or MIME Type</a>) of the distribution’s downloadURL.",
+            "type": "string"
+          },
+          "downloadURL": {
+            "title": "Download URL",
+            "description": "URL providing direct access to a downloadable file of a dataset.",
+            "type": "string",
+            "format": "uri"
+          },
+          "accessURL": {
+            "title": "Access URL",
+            "description": "URL providing indirect access to a dataset.",
+            "type": "string",
+            "format": "uri"
+          },
+          "conformsTo": {
+            "title": "Data Standard",
+            "description": "URL providing indirect access to a dataset.",
+            "type": "string",
+            "format": "uri"
+          },
+          "describedBy": {
+            "title": "Data Dictionary",
+            "description": "URL to the data dictionary for the distribution found at the downloadURL.",
+            "type": "string",
+            "format": "uri"
+          },
+          "describedByType": {
+            "title": "Data Dictionary Type",
+            "description": "The machine-readable file format (IANA Media Type or MIME Type) of the distribution’s describedBy URL.",
+            "pattern": "^[a-z\\/\\.\\+]+?$",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "distribution.ui": {
+    "identifier": {
+      "ui:options": {
+        "widget": "hidden"
+      }
+    },
+    "data": {
+      "properties": {
+        "@type": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        },
+        "mediaType": {
+          "ui:options": {
+            "widget": "hidden"
+          }
+        },
+        "description": {
+          "ui:options": {
+            "widget": "textarea",
+            "rows": 5
+          }
+        }
+      }
+    }
+  },
+  "theme": {
+    "title": "Category",
+    "description": "Main thematic category of the dataset.",
+    "type": "object",
+    "required": [
+      "identifier",
+      "data"
+    ],
+    "properties": {
+      "identifier": {
+        "title": "Identifier",
+        "type": "string"
+      },
+      "data": {
+        "type": "string",
+        "title": "Category",
+        "description": "Main thematic category of the dataset.",
+        "minLength": 1
+      }
+    }
+  },
+  "theme.ui": {
+    "identifier": {
+      "ui:options": {
+        "widget": "hidden"
+      }
+    },
+    "data": {
+      "ui:options": {
+        "title": "Topic"
+      }
+    }
+  },
+  "keyword": {
+    "title": "Tags",
+    "description": "Tags (or keywords) help users discover your dataset; please include terms that would be used by technical and non-technical users.",
+    "type": "object",
+    "required": [
+      "identifier",
+      "data"
+    ],
+    "properties": {
+      "identifier": {
+        "title": "Identifier",
+        "type": "string"
+      },
+      "data": {
+        "type": "string",
+        "title": "Tag",
+        "description": "Tags (or keywords) help users discover your dataset; please include terms that would be used by technical and non-technical users.",
+        "minLength": 1
+      }
+    }
+  },
+  "keyword.ui": {
+    "identifier": {
+      "ui:options": {
+        "widget": "hidden"
+      }
+    }
+  },
+  "data-dictionary": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Data Dictionary",
+    "type": "object",
+    "required": [
+      "identifier",
+      "data"
+    ],
+    "properties": {
+      "identifier": {
+        "title": "Identifier",
+        "type": "string"
+      },
+      "data": {
+        "title": "Project Open Data Data-Dictionary",
+        "description": "A data dictionary for this resource, compliant with the [Table Schema](https://specs.frictionlessdata.io/table-schema/) specification.",
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "fields": {
+            "title": "Dictionary Fields",
+            "type": "array",
+            "items": {
+              "title": "Field",
+              "type": "object",
+              "required": [
+                "name",
+                "type"
+              ],
+              "properties": {
+                "name": {
+                  "title": "Name",
+                  "description": "A name for this field.",
+                  "type": "string"
+                },
+                "title": {
+                  "title": "Title",
+                  "description": "A human-readable title.",
+                  "type": "string",
+                  "examples": [
+                    "{\n  \"title\": \"My Package Title\"\n}\n"
+                  ]
+                },
+                "type": {
+                  "title": "Type",
+                  "description": "The type keyword, which `MUST` be a value of `string`.",
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "number",
+                    "integer",
+                    "date",
+                    "time",
+                    "datetime",
+                    "year",
+                    "yearmonth",
+                    "boolean",
+                    "object",
+                    "geopoint",
+                    "geojson",
+                    "array",
+                    "duration"
+                  ]
+                },
+                "format": {
+                  "title": "Format",
+                  "description": "Supported formats depend on the specified field type:\n* For `string` the supported formats are `default`, `email`, `uri`, `binary`, and `uuid`:\n  - **default**: any valid string.\n  - **email**: A valid email address.\n  - **uri**: A valid URI.\n  - **binary**: A base64 encoded string representing binary data.\n  - **uuid**: A string that is a uuid.\n* For `number` only `default` is allowed.\n* For `integer` only `default` is allowed.\n* For `date` the supported formats are `default`, `any`, and `{PATTERN}`:\n  - **default**: An ISO8601 format string of YYYY-MM-DD.\n  - **any**: Any parsable representation of a date. The implementing library can attempt to parse the datetime via a range of strategies.\n  - **{PATTERN}**: The value can be parsed according to `{PATTERN}`, which `MUST` follow the date formatting syntax of C / Python [strftime](http://strftime.org/).\n* For `time` the supported formats are `default`, `any`, and `{PATTERN}`:\n  - **default**: An ISO8601 format string for time.\n  - **any**: Any parsable representation of a date. The implementing library can attempt to parse the datetime via a range of strategies.\n  - **{PATTERN}**: The value can be parsed according to `{PATTERN}`, which `MUST` follow the date formatting syntax of C / Python [strftime](http://strftime.org/).\n* For `datetime` the supported formats are `default`, `any`, and `{PATTERN}`:\n  - **default**: An ISO8601 format string for datetime.\n  - **any**: Any parsable representation of a date. The implementing library can attempt to parse the datetime via a range of strategies.\n  - **{PATTERN}**: The value can be parsed according to `{PATTERN}`, which `MUST` follow the date formatting syntax of C / Python [strftime](http://strftime.org/).\n* For `year` only `default` is allowed.\n* For `yearmonth` only `default` is allowed.\n* For `boolean` only `default` is allowed.\n* For `object` only `default` is allowed.\n* For `geopoint` the supported formats are `default`, `array`, and `object`:\n  - **default**: A string of the pattern 'lon, lat', where `lon` is the longitude and `lat` is the latitude.\n  - **array**: An array of exactly two items, where each item is either a number, or a string parsable as a number, and the first item is `lon` and the second item is `lat`.\n  - **object**: A JSON object with exactly two keys, `lat` and `lon`\n* For `geojson` the supported formats are `default` and `topojson`:\n  - **default**: A geojson object as per the [GeoJSON spec](http://geojson.org/).\n  - **topojson**: A topojson object as per the [TopoJSON spec](https://github.com/topojson/topojson-specification/blob/master/README.md).\n* For `array` only `default` is allowed.\n* For `duration` only `default` is allowed.",
+                  "type": "string",
+                  "default": "default"
+                }
+              }
+            }
+          },
+          "indexes": {
+            "title": "Dictionary Indexes",
+            "type": "array",
+            "items": {
+              "title": "Index",
+              "type": "object",
+              "required": [
+                "fields",
+                "type"
+              ],
+              "properties": {
+                "fields": {
+                  "title": "Fields",
+                  "type": "array",
+                  "items": {
+                    "title": "Field",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "title": "Name",
+                        "type": "string"
+                      },
+                      "length": {
+                        "title": "Length",
+                        "type": "integer"
+                      }
+                    }
+                  },
+                  "description": "One or more fields included in index. Must be keys from the fields object."
+                },
+                "type": {
+                  "title": "Type",
+                  "description": "Index type.",
+                  "type": "string",
+                  "enum": [
+                    "index",
+                    "fulltext"
+                  ],
+                  "default": "index"
+                },
+                "description": {
+                  "title": "Description",
+                  "type": "string",
+                  "description": "Description of index purpose or functionality."
+                }
+              }
+            },
+            "minItems": 0
+          }
+        }
+      }
+    }
+  }
+}
