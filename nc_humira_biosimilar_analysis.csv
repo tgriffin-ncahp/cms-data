@@ -1,0 +1,46 @@
+NC Medicaid Humira Biosimilar Cost Analysis
+Generated,2026-03-26
+Data Sources,CMS State Drug Utilization Data CY2024; NADAC CY2025; NC PDL Effective 01/01/2026 (rev 03/18/2026)
+
+BASELINE UTILIZATION DATA (CY2024)
+Metric,Value
+Total Humira Units Reimbursed,44310
+Total Humira Prescriptions,16238
+Gross Total Reimbursed,171393345.13
+Gross Medicaid Reimbursed,167145048.75
+Avg Reimbursed Cost per Unit,3868.05
+Avg Reimbursed Cost per Rx,10555.08
+Existing Biosimilar Units (CY2024),162
+Existing Biosimilar Share,<0.4%
+
+NADAC PRICING COMPARISON (2025)
+Product,NADAC per Unit,Discount vs Humira
+Humira(CF) Pen 40mg/0.4mL,3362.7,0%
+Simlandi(CF) 40mg,479.27,85.7%
+Yusimry(CF) 40mg,604.15,82.0%
+Adalimumab-adbm (generic Cyltezo),636.04,81.1%
+Hadlima(CF) 40mg,1260.33,62.5%
+Blended Biosimilar Average,744.95,77.8%
+
+NC PDL CO-PREFERRED BIOSIMILARS (Effective 01/01/2026)
+Non-proprietary Name,Brand Name,Dosage Forms
+adalimumab-adbm,Cyltezo (generic),Pen / Syringe
+adalimumab-afzb,Abrilada,Pen / Syringe
+adalimumab-bwwd,Hadlima,Syringe / PushTouch
+adalimumab-advo,Pyzchiva,Syringe / Vial
+adalimumab-ryvk,Simlandi,Autoinjector / Vial
+
+SCENARIO ANALYSIS
+Scenario,Biosimilar %,Humira Units,Biosimilar Units,Total Units,Gross Humira Cost,Gross Biosimilar Cost,Gross Total Cost,State Share (30%),Gross Savings vs Baseline,State Savings,% Savings
+0% Biosimilar (Baseline),0%,44310,0,44310,171393345.13,0.0,171393345.13,51418003.54,0.0,0.0,0.0%
+25% Biosimilar Shift,25%,33232,11078,44310,128545008.85,9492301.12,138037309.97,41411192.99,33356035.16,10006810.55,19.5%
+50% Biosimilar Shift,50%,22155,22155,44310,85696672.56,18984602.25,104681274.81,31404382.44,66712070.32,20013621.09,38.9%
+75% Biosimilar Shift,75%,11078,33232,44310,42848336.28,28476903.37,71325239.66,21397571.9,100068105.47,30020431.64,58.4%
+
+KEY ASSUMPTIONS
+Assumption,Value,Basis
+State Share (blended FMAP),30%,User-specified blended FMAP estimate
+Humira Reimbursed Cost/Unit,3868.05,CMS SDU CY2024 actual NC data
+Biosimilar Reimbursed Cost/Unit,856.9,NADAC ratio applied to actual Humira rate
+Total Utilization,44310,Held constant across scenarios (units)
+Analysis Type,Gross reimbursement (pre-rebate),Does not reflect MDRP rebates
