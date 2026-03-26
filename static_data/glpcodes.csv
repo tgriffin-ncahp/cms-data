@@ -1,50 +1,119 @@
-﻿Drug Name,NDC,NDC11,Starter Dose
-Wegovy,0169-4501-01,169450101,
-Wegovy,0169-4501-14,169450114,
-Wegovy,0169-4505-01,169450501,
-Wegovy,0169-4505-14,169450514,
-Wegovy,0169-4517-01,169451701,
-Wegovy,0169-4517-14,169451714,
-Wegovy,0169-4524-01,169452401,
-Wegovy,0169-4524-14,169452414,
-Wegovy,0169-4525-01,169452501,Y
-Wegovy,0169-4525-14,169452514,Y
-Wegovy,0169-4525-90,169452590,Y
-Wegovy,0169-4525-94,169452594,Y
-Wegovy,50090-5824-0,50090582400,Y
-Saxenda,0169-2800-15,169280015,
-Saxenda,50090-4257-0,50090425700,
-Zepbound,0002-2457-01,2245701,
-Zepbound,0002-2457-80,2245780,
-Zepbound,0002-2460-01,2246001,
-Zepbound,0002-2460-80,2246080,
-Zepbound,0002-2471-01,2247101,
-Zepbound,0002-2471-80,2247180,
-Zepbound,0002-2484-01,2248401,
-Zepbound,0002-2484-80,2248480,
-Zepbound,0002-2495-01,2249501,
-Zepbound,0002-2495-80,2249580,
-Zepbound,0002-2506-01,2250601,Y
-Zepbound,0002-2506-80,2250680,Y
-MOUNJARO,0002-1457-01,2145701,
-MOUNJARO,0002-1457-80,2145780,
-MOUNJARO,0002-1460-01,2146001,
-MOUNJARO,0002-1460-80,2146080,
-MOUNJARO,0002-1471-01,2147101,
-MOUNJARO,0002-1471-80,2147180,
-MOUNJARO,0002-1484-01,2148401,
-MOUNJARO,0002-1484-80,2148480,
-MOUNJARO,0002-1495-01,2149501,
-MOUNJARO,0002-1495-80,2149580,
-MOUNJARO,0002-1506-01,2150601,
-MOUNJARO,0002-1506-80,2150680,
-OZEMPIC,0169-4130-01,169413001,
-OZEMPIC,0016-9413-13,'00169413013,
-OZEMPIC,0169-4132-11,169413211,
-OZEMPIC,0169-4132-12,169413212,
-OZEMPIC,0169-4136-02,169413602,
-OZEMPIC,0169-4136-11,169413611,
-OZEMPIC,0169-4181-13,169418113,
-OZEMPIC,0169-4772-11,169477211,
-OZEMPIC,0169-4772-12,169477212,
-OZEMPIC,0169-4130-13,169413013,
+﻿Drug Name,NDC10,NDC11,Starter Dose,Uses,PDL Status
+BYDUREON,,00310654001,,Diabetes,Non-Preferred
+BYDUREON,,00310654004,,Diabetes,Non-Preferred
+BYDUREON,,00310652004,,Diabetes,NA
+BYDUREON,,00310654085,,Diabetes,Non-Preferred
+BYDUREON PEN,,00310653001,,Diabetes,NA
+BYDUREON PEN,,00310653004,,Diabetes,NA
+BYETTA,,00310651201,,Diabetes,Preferred
+BYETTA,,00310652401,,Diabetes,Preferred
+BYETTA,,54868538401,,Diabetes,NA
+EXENATIDE,,70121168501,,Diabetes,Non-Preferred
+EXENATIDE,,70121168601,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,00143914402,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,00143914403,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,70748034602,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,70748034603,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,71288056385,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,71288056384,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,00480366720,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,00480366722,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,00480725019,,Weight Loss,Non-Preferred
+LIRAGLUTIDE,,00480725046,,Weight Loss,Non-Preferred
+LIRAGLUTIDE,,00143914401,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,00480366719,,Diabetes,Non-Preferred
+LIRAGLUTIDE,,50090750100,,Diabetes,NA
+MOUNJARO,0002-1457-01,00002145701,,Diabetes,Non-Preferred
+MOUNJARO,0002-1457-80,00002145780,,Diabetes,Non-Preferred
+MOUNJARO,0002-1460-01,00002146001,,Diabetes,Non-Preferred
+MOUNJARO,0002-1460-80,00002146080,,Diabetes,Non-Preferred
+MOUNJARO,0002-1471-01,00002147101,,Diabetes,Non-Preferred
+MOUNJARO,0002-1471-80,00002147180,,Diabetes,Non-Preferred
+MOUNJARO,0002-1484-01,00002148401,,Diabetes,Non-Preferred
+MOUNJARO,0002-1484-80,00002148480,,Diabetes,Non-Preferred
+MOUNJARO,0002-1495-01,00002149501,,Diabetes,Non-Preferred
+MOUNJARO,0002-1495-80,00002149580,,Diabetes,Non-Preferred
+MOUNJARO,0002-1506-01,00002150601,,Diabetes,Non-Preferred
+MOUNJARO,0002-1506-80,00002150680,,Diabetes,Non-Preferred
+OZEMPIC,0169-4130-01,00169413001,,Diabetes,Preferred
+OZEMPIC,0016-9413-13,00169413013,,Diabetes,Preferred
+OZEMPIC,0169-4132-11,00169413211,,Diabetes,Preferred
+OZEMPIC,0169-4132-12,00169413212,,Diabetes,Preferred
+OZEMPIC,0169-4136-02,00169413602,,Diabetes,NA
+OZEMPIC,0169-4136-11,00169413611,,Diabetes,NA
+OZEMPIC,0169-4181-13,00169418113,,Diabetes,Preferred
+OZEMPIC,0169-4772-11,00169477211,,Diabetes,Preferred
+OZEMPIC,0169-4772-12,00169477212,,Diabetes,Preferred
+OZEMPIC,0169-4130-13,00169413013,,Diabetes,Preferred
+OZEMPIC,,00169418103,,Diabetes,Preferred
+OZEMPIC,,00169418197,,Diabetes,Preferred
+OZEMPIC,,50090594900,,Diabetes,NA
+OZEMPIC,,50090605100,,Diabetes,NA
+RYBELSUS,,00169430330,,Diabetes,Non-Preferred
+RYBELSUS,,00169430399,,Diabetes,Non-Preferred
+RYBELSUS,,00169430730,,Diabetes,Non-Preferred
+RYBELSUS,,00169431430,,Diabetes,Non-Preferred
+RYBELSUS,,00169430313,,Diabetes,NA
+RYBELSUS,,00169430713,,Diabetes,NA
+RYBELSUS,,00169431413,,Diabetes,NA
+RYBELSUS,,00169480430,,Diabetes,Non-Preferred
+RYBELSUS,,00169480930,,Diabetes,Non-Preferred
+RYBELSUS,,00169481530,,Diabetes,Non-Preferred
+Saxenda,0169-2800-15,00169280015,,Weight Loss,Non-Preferred
+Saxenda,50090-4257-0,50090425700,,Weight Loss,Non-Preferred
+SOLIQUA,,00024576105,,Diabetes,Non-Preferred
+TRULICITY,,00002143301,,Diabetes,Preferred
+TRULICITY,,00002143380,,Diabetes,Preferred
+TRULICITY,,00002143401,,Diabetes,Preferred
+TRULICITY,,00002143480,,Diabetes,Preferred
+TRULICITY,,00002318201,,Diabetes,Preferred
+TRULICITY,,00002318280,,Diabetes,Preferred
+TRULICITY,,00002223601,,Diabetes,Preferred
+TRULICITY,,00002223680,,Diabetes,Preferred
+Trulicity,,00002143361,,Diabetes,Preferred
+TRULICITY,,50090348300,,Diabetes,NA
+TRULICITY,,50090348400,,Diabetes,NA
+TRULICITY,,50090546700,,Diabetes,NA
+TRULICITY,,50090645300,,Diabetes,NA
+TRULICITY,,50090645600,,Diabetes,NA
+TRULICITY,,50090657100,,Diabetes,NA
+VICTOZA,,00169406012,,Diabetes,Preferred
+VICTOZA,,00169406013,,Diabetes,Preferred
+Wegovy,0169-4501-01,00169450101,,Weight Loss,Preferred
+Wegovy,0169-4501-14,00169450114,,"Weight Loss, Cardioprotection, MASH",Preferred
+Wegovy,0169-4505-01,00169450501,,Weight Loss,Preferred
+Wegovy,0169-4505-14,00169450514,,"Weight Loss, Cardioprotection, MASH",Preferred
+Wegovy,0169-4517-01,00169451701,,Weight Loss,Preferred
+Wegovy,0169-4517-14,00169451714,,"Weight Loss, Cardioprotection, MASH",Preferred
+Wegovy,0169-4524-01,00169452401,,Weight Loss,Preferred
+Wegovy,0169-4524-14,00169452414,,"Weight Loss, Cardioprotection, MASH",Preferred
+Wegovy,0169-4525-01,00169452501,Y,Weight Loss,Preferred
+Wegovy,0169-4525-14,00169452514,Y,"Weight Loss, Cardioprotection, MASH",Preferred
+Wegovy,0169-4525-90,00169452590,Y,Weight Loss,Preferred
+Wegovy,0169-4525-94,00169452594,Y,"Weight Loss, Cardioprotection, MASH",Preferred
+Wegovy,50090-5824-0,50090582400,Y,Weight Loss,NA
+WEGOVY,,00169441531,,"Weight Loss, Cardioprotection, MASH",Non-Preferred
+WEGOVY,,00169440431,,"Weight Loss, Cardioprotection, MASH",Non-Preferred
+WEGOVY,,00169440931,,"Weight Loss, Cardioprotection, MASH",Non-Preferred
+WEGOVY,,00169442531,,"Weight Loss, Cardioprotection, MASH",Non-Preferred
+XULTOPHY,,00169291115,,Diabetes,Non-Preferred
+Zepbound,0002-2457-01,00002245701,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2457-80,00002245780,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2460-01,00002246001,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2460-80,00002246080,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2471-01,00002247101,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2471-80,00002247180,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2484-01,00002248401,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2484-80,00002248480,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2495-01,00002249501,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2495-80,00002249580,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2506-01,00002250601,Y,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,0002-2506-80,00002250680,Y,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+ZEPBOUND,,00002024304,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+ZEPBOUND,,00002015204,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+ZEPBOUND,,00002134004,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+ZEPBOUND,,00002142304,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+ZEPBOUND,,00002200204,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+ZEPBOUND,,00002121404,,"Weight Loss, Obstructive Sleep Apnea",Non-Preferred
+Zepbound,,00002015201,,Weight Loss,Non-Preferred
+Zepbound,,00002024301,,Weight Loss,Non-Preferred

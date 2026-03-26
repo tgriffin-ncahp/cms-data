@@ -10,3 +10,7 @@ wheels/
 .venv
 drugs_data/
 drugs_data.db
+data-2024.csv
+dev.py
+drug_data.bak
+drugs_data.db-wal
