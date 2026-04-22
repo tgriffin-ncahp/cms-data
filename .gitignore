@@ -14,3 +14,6 @@ data-2024.csv
 dev.py
 drug_data.bak
 drugs_data.db-wal
+humira.sql nc_by_drug.sql ncdu.sql ncglp.sql
+archive/
+data/source_data/

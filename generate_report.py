@@ -28,6 +28,118 @@ BIOSIMILAR_NADAC = {
     "Hadlima(CF) 40mg": 1260.33,
 }
 
+# ─── HISTORICAL TREND DATA ───────────────────────────────────────────────────
+
+HISTORICAL = {
+    "CY2022": {"units": 38_450, "rx": 14_665, "total": 141_132_925, "medicaid": 139_855_696, "cpu": 3670.60},
+    "CY2023": {"units": 45_213, "rx": 16_482, "total": 175_443_208, "medicaid": 172_953_312, "cpu": 3880.35},
+    "CY2024": {"units": 44_310, "rx": 16_238, "total": 171_393_345, "medicaid": 167_145_049, "cpu": 3868.05},
+}
+
+# ─── SFY PROJECTION DATA ────────────────────────────────────────────────────
+# NC SFY runs July 1 - June 30
+# PDL change effective January 1, 2026
+# Base quarterly run rate from CY2024
+
+QUARTERLY_UNITS = HUMIRA_UNITS / 4  # ~11,078 units/quarter
+QUARTERLY_SPEND = HUMIRA_GROSS_TOTAL / 4  # ~$42.85M/quarter
+HUMIRA_ANNUAL_INFLATION = 0.02  # 2% annual price growth for Humira
+BIOSIMILAR_ANNUAL_DEFLATION = 0.05  # 5% annual price decline for biosimilars (competition)
+
+# Biosimilar adoption ramp by quarter (% of adalimumab volume)
+# Three scenarios based on other states' PDL change experiences
+ADOPTION_SCENARIOS = {
+    "Conservative": {
+        # SFY26 (Jul 2025 - Jun 2026)
+        "SFY26_Q1": 0.00,  # Jul-Sep 2025: pre-PDL change
+        "SFY26_Q2": 0.00,  # Oct-Dec 2025: pre-PDL change
+        "SFY26_Q3": 0.05,  # Jan-Mar 2026: PDL change, early adopters
+        "SFY26_Q4": 0.10,  # Apr-Jun 2026: slow ramp
+        # SFY27 (Jul 2026 - Jun 2027)
+        "SFY27_Q1": 0.15,
+        "SFY27_Q2": 0.20,
+        "SFY27_Q3": 0.25,
+        "SFY27_Q4": 0.30,
+    },
+    "Moderate": {
+        "SFY26_Q1": 0.00,
+        "SFY26_Q2": 0.00,
+        "SFY26_Q3": 0.10,
+        "SFY26_Q4": 0.20,
+        "SFY27_Q1": 0.30,
+        "SFY27_Q2": 0.40,
+        "SFY27_Q3": 0.50,
+        "SFY27_Q4": 0.55,
+    },
+    "Aggressive": {
+        "SFY26_Q1": 0.00,
+        "SFY26_Q2": 0.00,
+        "SFY26_Q3": 0.15,
+        "SFY26_Q4": 0.30,
+        "SFY27_Q1": 0.45,
+        "SFY27_Q2": 0.55,
+        "SFY27_Q3": 0.65,
+        "SFY27_Q4": 0.75,
+    },
+}
+
+SFY_QUARTERS = [
+    ("SFY26_Q1", "Jul-Sep 2025", "SFY26"),
+    ("SFY26_Q2", "Oct-Dec 2025", "SFY26"),
+    ("SFY26_Q3", "Jan-Mar 2026", "SFY26"),
+    ("SFY26_Q4", "Apr-Jun 2026", "SFY26"),
+    ("SFY27_Q1", "Jul-Sep 2026", "SFY27"),
+    ("SFY27_Q2", "Oct-Dec 2026", "SFY27"),
+    ("SFY27_Q3", "Jan-Mar 2027", "SFY27"),
+    ("SFY27_Q4", "Apr-Jun 2027", "SFY27"),
+]
+
+
+def compute_sfy_quarter(q_key, bio_pct, quarters_from_base=0):
+    """Compute costs for a single SFY quarter with price inflation/deflation."""
+    years_out = quarters_from_base / 4
+    humira_cpu = HUMIRA_COST_PER_UNIT * (1 + HUMIRA_ANNUAL_INFLATION) ** years_out
+    bio_cpu = BIOSIMILAR_COST_PER_UNIT * (1 - BIOSIMILAR_ANNUAL_DEFLATION) ** years_out
+
+    humira_u = QUARTERLY_UNITS * (1 - bio_pct)
+    bio_u = QUARTERLY_UNITS * bio_pct
+
+    gross_humira = humira_u * humira_cpu
+    gross_bio = bio_u * bio_cpu
+    gross_total = gross_humira + gross_bio
+    # Baseline = no biosimilar shift, same quarter inflation
+    baseline = QUARTERLY_UNITS * humira_cpu
+    savings = baseline - gross_total
+
+    return {
+        "q_key": q_key,
+        "bio_pct": bio_pct,
+        "humira_cpu": humira_cpu,
+        "bio_cpu": bio_cpu,
+        "humira_units": humira_u,
+        "bio_units": bio_u,
+        "gross_humira": gross_humira,
+        "gross_bio": gross_bio,
+        "gross_total": gross_total,
+        "baseline": baseline,
+        "savings": savings,
+        "state_cost": gross_total * STATE_SHARE,
+        "state_savings": savings * STATE_SHARE,
+    }
+
+
+def compute_sfy_projection(scenario_name):
+    """Compute full SFY26+SFY27 projection for a given adoption scenario."""
+    adoption = ADOPTION_SCENARIOS[scenario_name]
+    quarters = []
+    for i, (q_key, q_label, sfy) in enumerate(SFY_QUARTERS):
+        bio_pct = adoption[q_key]
+        q = compute_sfy_quarter(q_key, bio_pct, quarters_from_base=i)
+        q["label"] = q_label
+        q["sfy"] = sfy
+        quarters.append(q)
+    return quarters
+
 AVG_BIOSIMILAR_NADAC = sum(BIOSIMILAR_NADAC.values()) / len(BIOSIMILAR_NADAC)
 NADAC_DISCOUNT = 1 - (AVG_BIOSIMILAR_NADAC / NADAC_HUMIRA)
 BIOSIMILAR_COST_PER_UNIT = HUMIRA_COST_PER_UNIT * (AVG_BIOSIMILAR_NADAC / NADAC_HUMIRA)
@@ -170,6 +282,127 @@ def generate_charts():
     plt.close(fig3)
     chart_paths["state_savings"] = p3
 
+    # Chart 4: Historical trend
+    fig4, ax4 = plt.subplots(figsize=(7, 4))
+    years = list(HISTORICAL.keys())
+    totals = [HISTORICAL[y]["total"] / 1e6 for y in years]
+    units = [HISTORICAL[y]["units"] / 1000 for y in years]
+
+    ax4b = ax4.twinx()
+    bars4 = ax4.bar(years, totals, color="#2c5f8a", alpha=0.7, label="Gross Spend ($M)")
+    line4 = ax4b.plot(years, units, "o-", color="#c44e52", linewidth=2, markersize=8, label="Units (thousands)")
+
+    ax4.set_ylabel("Gross Spend ($ Millions)", fontsize=10, color="#2c5f8a")
+    ax4b.set_ylabel("Units Reimbursed (thousands)", fontsize=10, color="#c44e52")
+    ax4.set_title("NC Medicaid Humira: Historical Utilization & Spend", fontsize=12, fontweight="bold")
+    ax4.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"${v:,.0f}M"))
+
+    for bar, val in zip(bars4, totals):
+        ax4.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 2,
+                 f"${val:.0f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
+    for yr, u in zip(years, units):
+        ax4b.annotate(f"{u:.1f}K", (yr, u), textcoords="offset points",
+                      xytext=(0, 10), ha="center", fontsize=9, color="#c44e52", fontweight="bold")
+
+    ax4.set_ylim(0, max(totals) * 1.2)
+    ax4b.set_ylim(0, max(units) * 1.3)
+    lines_labels = [bars4] + line4
+    labels_leg = ["Gross Spend ($M)", "Units (thousands)"]
+    ax4.legend(lines_labels, labels_leg, loc="upper left", fontsize=8)
+
+    plt.tight_layout()
+    p4 = os.path.join(OUTPUT_DIR, "_chart_historical.png")
+    fig4.savefig(p4, dpi=150)
+    plt.close(fig4)
+    chart_paths["historical"] = p4
+
+    # Chart 5: SFY Quarterly Projection - Gross Cost by Scenario
+    fig5, (ax5a, ax5b) = plt.subplots(1, 2, figsize=(11, 4.5))
+
+    q_labels = [q[1] for q in SFY_QUARTERS]
+    colors_sc = {"Conservative": "#4c9a6e", "Moderate": "#2c5f8a", "Aggressive": "#c44e52"}
+
+    for sc_name, color in colors_sc.items():
+        proj = compute_sfy_projection(sc_name)
+        costs = [q["gross_total"] / 1e6 for q in proj]
+        savings = [q["state_savings"] / 1e6 for q in proj]
+        ax5a.plot(range(len(q_labels)), costs, "o-", color=color, linewidth=2, markersize=5, label=sc_name)
+        ax5b.plot(range(len(q_labels)), savings, "o-", color=color, linewidth=2, markersize=5, label=sc_name)
+
+    # Baseline (no shift)
+    baseline_costs = [QUARTERLY_UNITS * HUMIRA_COST_PER_UNIT * (1 + HUMIRA_ANNUAL_INFLATION) ** (i / 4) / 1e6
+                      for i in range(8)]
+    ax5a.plot(range(8), baseline_costs, "--", color="gray", linewidth=1.5, label="No Shift (Baseline)")
+
+    ax5a.set_xticks(range(len(q_labels)))
+    ax5a.set_xticklabels(q_labels, rotation=45, ha="right", fontsize=7)
+    ax5a.set_ylabel("Quarterly Gross Cost ($M)", fontsize=10)
+    ax5a.set_title("Projected Quarterly Gross Cost", fontsize=11, fontweight="bold")
+    ax5a.legend(fontsize=7)
+    ax5a.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"${v:,.0f}M"))
+    ax5a.axvline(x=1.5, color="orange", linestyle=":", alpha=0.7)
+    ax5a.text(1.7, ax5a.get_ylim()[1] * 0.95, "PDL\nChange", fontsize=7, color="orange", va="top")
+    ax5a.axvline(x=3.5, color="gray", linestyle=":", alpha=0.5)
+    ax5a.text(3.7, ax5a.get_ylim()[1] * 0.05, "SFY27\nStart", fontsize=7, color="gray", va="bottom")
+
+    ax5b.set_xticks(range(len(q_labels)))
+    ax5b.set_xticklabels(q_labels, rotation=45, ha="right", fontsize=7)
+    ax5b.set_ylabel("Quarterly State Savings ($M)", fontsize=10)
+    ax5b.set_title("Projected Quarterly State Savings (30%)", fontsize=11, fontweight="bold")
+    ax5b.legend(fontsize=7)
+    ax5b.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"${v:,.1f}M"))
+    ax5b.axvline(x=1.5, color="orange", linestyle=":", alpha=0.7)
+    ax5b.axvline(x=3.5, color="gray", linestyle=":", alpha=0.5)
+
+    plt.tight_layout()
+    p5 = os.path.join(OUTPUT_DIR, "_chart_sfy_projection.png")
+    fig5.savefig(p5, dpi=150)
+    plt.close(fig5)
+    chart_paths["sfy_projection"] = p5
+
+    # Chart 6: Cumulative savings SFY26+SFY27 bar chart
+    fig6, ax6 = plt.subplots(figsize=(8, 4.5))
+    sc_names = list(ADOPTION_SCENARIOS.keys())
+    sfy26_savings = []
+    sfy27_savings = []
+    for sc in sc_names:
+        proj = compute_sfy_projection(sc)
+        s26 = sum(q["state_savings"] for q in proj if q["sfy"] == "SFY26") / 1e6
+        s27 = sum(q["state_savings"] for q in proj if q["sfy"] == "SFY27") / 1e6
+        sfy26_savings.append(s26)
+        sfy27_savings.append(s27)
+
+    x6 = range(len(sc_names))
+    b6a = ax6.bar([i - 0.18 for i in x6], sfy26_savings, 0.35, label="SFY26 State Savings", color="#4c9a6e")
+    b6b = ax6.bar([i + 0.18 for i in x6], sfy27_savings, 0.35, label="SFY27 State Savings", color="#2c5f8a")
+
+    for bar, val in zip(b6a, sfy26_savings):
+        ax6.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.2,
+                 f"${val:.1f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
+    for bar, val in zip(b6b, sfy27_savings):
+        ax6.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.2,
+                 f"${val:.1f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
+
+    # Add cumulative labels
+    for i, sc in enumerate(sc_names):
+        cumul = sfy26_savings[i] + sfy27_savings[i]
+        ax6.text(i, max(sfy26_savings[i], sfy27_savings[i]) + 1.5,
+                 f"Total: ${cumul:.1f}M", ha="center", fontsize=8, style="italic", color="#333")
+
+    ax6.set_ylabel("State Gross Savings ($ Millions)", fontsize=11)
+    ax6.set_title("Cumulative State Savings by Adoption Scenario (SFY26 + SFY27)", fontsize=12, fontweight="bold")
+    ax6.set_xticks(list(x6))
+    ax6.set_xticklabels(sc_names, fontsize=10)
+    ax6.legend(fontsize=9)
+    ax6.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"${v:,.0f}M"))
+    ax6.set_ylim(0, max(sfy27_savings) * 1.35)
+
+    plt.tight_layout()
+    p6 = os.path.join(OUTPUT_DIR, "_chart_cumulative_savings.png")
+    fig6.savefig(p6, dpi=150)
+    plt.close(fig6)
+    chart_paths["cumulative_savings"] = p6
+
     return chart_paths
 
 
@@ -257,6 +490,69 @@ def generate_csv():
         w.writerow(["Biosimilar Reimbursed Cost/Unit", round(BIOSIMILAR_COST_PER_UNIT, 2), "NADAC ratio applied to actual Humira rate"])
         w.writerow(["Total Utilization", HUMIRA_UNITS, "Held constant across scenarios (units)"])
         w.writerow(["Analysis Type", "Gross reimbursement (pre-rebate)", "Does not reflect MDRP rebates"])
+        w.writerow([])
+
+        # Historical trend
+        w.writerow(["HISTORICAL TREND (CY2022-CY2024)"])
+        w.writerow(["Year", "Units", "Prescriptions", "Gross Total", "Medicaid Total", "Avg Cost/Unit"])
+        for yr, d in HISTORICAL.items():
+            w.writerow([yr, d["units"], d["rx"], d["total"], d["medicaid"], d["cpu"]])
+        w.writerow([])
+
+        # SFY Projection - Quarterly detail for each scenario
+        for sc_name in ADOPTION_SCENARIOS:
+            w.writerow([f"SFY PROJECTION: {sc_name.upper()} ADOPTION SCENARIO"])
+            w.writerow([
+                "Quarter", "Period", "SFY", "Biosimilar %",
+                "Humira Units", "Biosimilar Units",
+                "Humira Cost/Unit", "Biosimilar Cost/Unit",
+                "Gross Total", "Baseline (No Shift)", "Gross Savings",
+                "State Cost (30%)", "State Savings (30%)",
+            ])
+            proj = compute_sfy_projection(sc_name)
+            sfy26_total = {"gross": 0, "baseline": 0, "savings": 0, "state_cost": 0, "state_savings": 0}
+            sfy27_total = {"gross": 0, "baseline": 0, "savings": 0, "state_cost": 0, "state_savings": 0}
+            for q in proj:
+                w.writerow([
+                    q["q_key"], q["label"], q["sfy"], f"{q['bio_pct'] * 100:.0f}%",
+                    round(q["humira_units"]), round(q["bio_units"]),
+                    round(q["humira_cpu"], 2), round(q["bio_cpu"], 2),
+                    round(q["gross_total"], 2), round(q["baseline"], 2), round(q["savings"], 2),
+                    round(q["state_cost"], 2), round(q["state_savings"], 2),
+                ])
+                bucket = sfy26_total if q["sfy"] == "SFY26" else sfy27_total
+                bucket["gross"] += q["gross_total"]
+                bucket["baseline"] += q["baseline"]
+                bucket["savings"] += q["savings"]
+                bucket["state_cost"] += q["state_cost"]
+                bucket["state_savings"] += q["state_savings"]
+
+            w.writerow(["SFY26 TOTAL", "", "SFY26", "",
+                        "", "", "", "",
+                        round(sfy26_total["gross"], 2), round(sfy26_total["baseline"], 2),
+                        round(sfy26_total["savings"], 2),
+                        round(sfy26_total["state_cost"], 2), round(sfy26_total["state_savings"], 2)])
+            w.writerow(["SFY27 TOTAL", "", "SFY27", "",
+                        "", "", "", "",
+                        round(sfy27_total["gross"], 2), round(sfy27_total["baseline"], 2),
+                        round(sfy27_total["savings"], 2),
+                        round(sfy27_total["state_cost"], 2), round(sfy27_total["state_savings"], 2)])
+            cumul = {k: sfy26_total[k] + sfy27_total[k] for k in sfy26_total}
+            w.writerow(["CUMULATIVE", "", "SFY26+27", "",
+                        "", "", "", "",
+                        round(cumul["gross"], 2), round(cumul["baseline"], 2),
+                        round(cumul["savings"], 2),
+                        round(cumul["state_cost"], 2), round(cumul["state_savings"], 2)])
+            w.writerow([])
+
+        # Projection assumptions
+        w.writerow(["SFY PROJECTION ASSUMPTIONS"])
+        w.writerow(["Assumption", "Value", "Basis"])
+        w.writerow(["Quarterly base units", round(QUARTERLY_UNITS), "CY2024 annual / 4"])
+        w.writerow(["Humira annual price inflation", f"{HUMIRA_ANNUAL_INFLATION*100:.0f}%", "Conservative estimate based on CY2022-2024 trend"])
+        w.writerow(["Biosimilar annual price deflation", f"{BIOSIMILAR_ANNUAL_DEFLATION*100:.0f}%", "Expected competitive price erosion"])
+        w.writerow(["PDL change effective date", "January 1, 2026", "NC PDL revision"])
+        w.writerow(["NC SFY", "July 1 - June 30", ""])
 
     return csv_path
 
@@ -637,6 +933,218 @@ def generate_pdf(chart_paths):
         "revisions. NADAC rates are point-in-time and subject to weekly updates.\n\n"
         "6. Excludes managed care: MCOU records reflect managed care utilization but the "
         "rebate and cost-sharing structures within MCOs may differ from FFS."
+    )
+
+    # ── Page 9: Historical Trend ─────────────────────────────────────────
+    pdf.add_page()
+    pdf.section_title("7. Historical Utilization Trend (CY2022-CY2024)")
+    pdf.body_text(
+        "NC Medicaid Humira utilization grew significantly from CY2022 to CY2023 (+17.6% in units, "
+        "+24.3% in gross spend), then stabilized in CY2024 (-2.0% in units, -2.3% in spend). "
+        "Cost per unit has been relatively flat since CY2023 (~$3,870-$3,880). This trend informs "
+        "the projection assumption of flat utilization and modest (~2%) annual price inflation."
+    )
+
+    widths_hist = [30, 25, 25, 35, 35, 30, 30]
+    pdf.table_header(["Year", "Units", "Rx", "Gross Total", "Medicaid", "Avg/Unit", "YoY Chg"], widths_hist)
+    prev_total = None
+    for yr, d in HISTORICAL.items():
+        yoy = f"{(d['total'] / prev_total - 1) * 100:+.1f}%" if prev_total else "---"
+        pdf.table_row([yr, f"{d['units']:,}", f"{d['rx']:,}",
+                       f"${d['total'] / 1e6:.1f}M", f"${d['medicaid'] / 1e6:.1f}M",
+                       f"${d['cpu']:,.0f}", yoy],
+                      widths_hist, aligns=["C", "R", "R", "R", "R", "R", "C"])
+        prev_total = d["total"]
+
+    pdf.ln(3)
+    if "historical" in chart_paths:
+        pdf.image(chart_paths["historical"], x=20, w=170)
+
+    # ── Page 10: SFY Projection Overview ─────────────────────────────────
+    pdf.add_page()
+    pdf.section_title("8. SFY26-SFY27 Cost Savings Projection")
+    pdf.body_text(
+        "The following projections model gross cost savings through SFY27 (ending June 30, 2027) "
+        "under three biosimilar adoption scenarios. The NC PDL change takes effect January 1, 2026, "
+        "which falls in the second half of SFY26. Three adoption ramp scenarios reflect varying "
+        "speed of biosimilar uptake after the PDL change:\n\n"
+        "- Conservative: Slow adoption, reaching 30% biosimilar share by end of SFY27\n"
+        "- Moderate: Steady adoption, reaching 55% by end of SFY27\n"
+        "- Aggressive: Rapid adoption, reaching 75% by end of SFY27"
+    )
+
+    pdf.sub_title("Projection Assumptions")
+    pdf.kv_row("Base quarterly utilization", f"{QUARTERLY_UNITS:,.0f} units (CY2024 annualized)")
+    pdf.kv_row("Humira annual price inflation", f"{HUMIRA_ANNUAL_INFLATION * 100:.0f}%")
+    pdf.kv_row("Biosimilar annual price deflation", f"{BIOSIMILAR_ANNUAL_DEFLATION * 100:.0f}% (competitive erosion)")
+    pdf.kv_row("PDL change effective", "January 1, 2026 (SFY26 Q3)")
+    pdf.kv_row("NC State Fiscal Year", "July 1 - June 30")
+    pdf.kv_row("State share", f"{STATE_SHARE * 100:.0f}% (blended FMAP)")
+
+    pdf.ln(3)
+    if "sfy_projection" in chart_paths:
+        pdf.image(chart_paths["sfy_projection"], x=5, w=200)
+
+    # ── Page 11: SFY Summary Table ───────────────────────────────────────
+    pdf.add_page()
+    pdf.sub_title("SFY Annual Summary by Scenario")
+
+    widths_sfy_sum = [35, 28, 28, 28, 28, 28, 15]
+    pdf.table_header(["Scenario", "SFY26 Gross", "SFY26 State", "SFY27 Gross", "SFY27 State",
+                       "Cumul. State", ""], widths_sfy_sum)
+
+    for sc_name in ADOPTION_SCENARIOS:
+        proj = compute_sfy_projection(sc_name)
+        s26_gross = sum(q["gross_total"] for q in proj if q["sfy"] == "SFY26")
+        s26_savings = sum(q["state_savings"] for q in proj if q["sfy"] == "SFY26")
+        s27_gross = sum(q["gross_total"] for q in proj if q["sfy"] == "SFY27")
+        s27_savings = sum(q["state_savings"] for q in proj if q["sfy"] == "SFY27")
+        cumul = s26_savings + s27_savings
+        pdf.table_row([
+            sc_name,
+            f"${s26_savings / 1e6:.1f}M",
+            f"${s26_savings / 1e6:.1f}M",
+            f"${s27_savings / 1e6:.1f}M",
+            f"${s27_savings / 1e6:.1f}M",
+            f"${cumul / 1e6:.1f}M",
+            "",
+        ], widths_sfy_sum, aligns=["L", "R", "R", "R", "R", "R", "C"],
+            highlight=(sc_name == "Moderate"))
+
+    # Baseline row
+    proj_base = compute_sfy_projection("Moderate")
+    s26_base = sum(q["baseline"] for q in proj_base if q["sfy"] == "SFY26")
+    s27_base = sum(q["baseline"] for q in proj_base if q["sfy"] == "SFY27")
+    pdf.table_row([
+        "No Shift (Base)", f"${s26_base / 1e6:.1f}M", "---",
+        f"${s27_base / 1e6:.1f}M", "---", "---", "",
+    ], widths_sfy_sum, aligns=["L", "R", "R", "R", "R", "R", "C"])
+
+    pdf.ln(3)
+    if "cumulative_savings" in chart_paths:
+        pdf.image(chart_paths["cumulative_savings"], x=12, w=185)
+
+    # ── Page 12-13: Quarterly Detail ─────────────────────────────────────
+    for sc_name in ADOPTION_SCENARIOS:
+        pdf.add_page()
+        pdf.sub_title(f"Quarterly Detail: {sc_name} Adoption Scenario")
+
+        proj = compute_sfy_projection(sc_name)
+
+        # Adoption ramp description
+        adoption = ADOPTION_SCENARIOS[sc_name]
+        ramp_desc = ", ".join(
+            f"{adoption[q[0]] * 100:.0f}%" for q in SFY_QUARTERS
+        )
+        pdf.set_font("Helvetica", "I", 8.5)
+        pdf.set_text_color(80, 80, 80)
+        pdf.cell(0, 4.5, f"  Quarterly biosimilar share ramp: {ramp_desc}",
+                 new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(3)
+
+        widths_qd = [24, 12, 24, 24, 24, 24, 24, 24]
+        pdf.table_header(["Quarter", "Bio%", "Humira $", "Biosim $", "Gross Total",
+                           "Baseline", "Savings", "State Sav"], widths_qd)
+
+        sfy26_tot = {"gross": 0, "base": 0, "sav": 0, "st_sav": 0}
+        sfy27_tot = {"gross": 0, "base": 0, "sav": 0, "st_sav": 0}
+
+        for q in proj:
+            is_sfy27_start = q["q_key"] == "SFY27_Q1"
+            if is_sfy27_start and sfy26_tot["gross"] > 0:
+                # Print SFY26 subtotal
+                pdf.table_row([
+                    "SFY26 Total", "", "", "",
+                    f"${sfy26_tot['gross'] / 1e6:.1f}M",
+                    f"${sfy26_tot['base'] / 1e6:.1f}M",
+                    f"${sfy26_tot['sav'] / 1e6:.1f}M",
+                    f"${sfy26_tot['st_sav'] / 1e6:.1f}M",
+                ], widths_qd, aligns=["L", "C", "R", "R", "R", "R", "R", "R"], highlight=True)
+
+            pdf.table_row([
+                q["label"],
+                f"{q['bio_pct'] * 100:.0f}%",
+                f"${q['gross_humira'] / 1e6:.1f}M",
+                f"${q['gross_bio'] / 1e6:.1f}M",
+                f"${q['gross_total'] / 1e6:.1f}M",
+                f"${q['baseline'] / 1e6:.1f}M",
+                f"${q['savings'] / 1e6:.1f}M",
+                f"${q['state_savings'] / 1e6:.1f}M",
+            ], widths_qd, aligns=["L", "C", "R", "R", "R", "R", "R", "R"])
+
+            bucket = sfy26_tot if q["sfy"] == "SFY26" else sfy27_tot
+            bucket["gross"] += q["gross_total"]
+            bucket["base"] += q["baseline"]
+            bucket["sav"] += q["savings"]
+            bucket["st_sav"] += q["state_savings"]
+
+        # Print SFY27 subtotal
+        pdf.table_row([
+            "SFY27 Total", "", "", "",
+            f"${sfy27_tot['gross'] / 1e6:.1f}M",
+            f"${sfy27_tot['base'] / 1e6:.1f}M",
+            f"${sfy27_tot['sav'] / 1e6:.1f}M",
+            f"${sfy27_tot['st_sav'] / 1e6:.1f}M",
+        ], widths_qd, aligns=["L", "C", "R", "R", "R", "R", "R", "R"], highlight=True)
+
+        # Cumulative
+        cumul_gross = sfy26_tot["gross"] + sfy27_tot["gross"]
+        cumul_base = sfy26_tot["base"] + sfy27_tot["base"]
+        cumul_sav = sfy26_tot["sav"] + sfy27_tot["sav"]
+        cumul_st = sfy26_tot["st_sav"] + sfy27_tot["st_sav"]
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_text_color(30, 60, 110)
+        pdf.ln(2)
+        pdf.cell(0, 5.5,
+                 f"  Cumulative State Savings (SFY26+SFY27): ${cumul_st / 1e6:.1f}M "
+                 f"({cumul_sav / cumul_base * 100:.1f}% of baseline)",
+                 new_x="LMARGIN", new_y="NEXT")
+
+    # ── Final page: Projection Methodology ───────────────────────────────
+    pdf.add_page()
+    pdf.section_title("9. SFY Projection Methodology")
+    pdf.body_text(
+        "The SFY26-SFY27 projections extend the point-in-time scenario analysis into a "
+        "time-series model that accounts for the PDL change timeline, gradual biosimilar "
+        "adoption, and price dynamics."
+    )
+
+    pdf.sub_title("Adoption Curve Rationale")
+    pdf.body_text(
+        "Biosimilar adoption following a PDL co-preferred designation typically follows an "
+        "S-curve pattern. New starts shift first, while existing patients on Humira convert "
+        "more gradually. The three scenarios bracket the range of plausible outcomes:\n\n"
+        "- Conservative (30% by SFY27 end): Reflects provider inertia, patient reluctance to "
+        "switch, and limited plan-level enforcement of biosimilar preference.\n\n"
+        "- Moderate (55% by SFY27 end): Consistent with states that have implemented co-preferred "
+        "status with active utilization management (step therapy, prior authorization encouraging "
+        "biosimilar starts).\n\n"
+        "- Aggressive (75% by SFY27 end): Assumes strong plan-level enforcement, mandatory "
+        "biosimilar-first policies for new starts, and active switching programs for stable patients."
+    )
+
+    pdf.sub_title("Price Dynamics")
+    pdf.body_text(
+        f"Humira's cost per unit is inflated at {HUMIRA_ANNUAL_INFLATION * 100:.0f}% annually, "
+        "consistent with the modest year-over-year increases observed in CY2022-CY2024 NC data "
+        f"(CY2022: $3,671 -> CY2024: $3,868, ~2.7% CAGR).\n\n"
+        f"Biosimilar cost per unit is deflated at {BIOSIMILAR_ANNUAL_DEFLATION * 100:.0f}% annually, "
+        "reflecting expected competitive pricing pressure as multiple biosimilars compete for "
+        "market share following the PDL change. This is conservative relative to the 10-30% annual "
+        "price erosion observed in mature biosimilar markets (e.g., infliximab biosimilars)."
+    )
+
+    pdf.sub_title("Key Projection Limitations")
+    pdf.body_text(
+        "1. Adoption ramps are illustrative, not predictive. Actual adoption depends on plan-level "
+        "policies, provider behavior, patient preferences, and manufacturer contracting.\n\n"
+        "2. Utilization volume is held flat. In practice, lower costs may increase utilization "
+        "(demand elasticity), and the expanded preferred list may attract patients from competing "
+        "biologics (e.g., etanercept).\n\n"
+        "3. Rebate dynamics (Section 5) apply to projections as well. Projected gross savings "
+        "may not translate to net savings without supplemental rebate offsets.\n\n"
+        "4. MCO contracting: NC Medicaid managed care organizations may negotiate separate "
+        "rebate and formulary arrangements that diverge from the state PDL."
     )
 
     # Save PDF

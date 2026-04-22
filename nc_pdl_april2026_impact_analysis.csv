@@ -1,0 +1,69 @@
+NC Medicaid April 2026 PDL Impact Analysis
+Generated,2026-04-02
+Data Sources,CMS SDU CY2024/H1-2025; NADAC 04/01/2026; NC DHHS PDL 04/01/2026
+
+AFFECTED DRUG UTILIZATION SUMMARY
+Drug,Category,CY2024 Units,CY2024 Rx,CY2024 Total,CY2024 Medicaid,H1-2025 Total,Annualized 2025,NADAC/Unit,Cost/Unit (Actual),YoY Growth
+Humira,TNF-alpha Inhibitor,44310.0,16238,171393345.13,167145048.75,91835855.58,183671711.16,3366.48,3868.03,7.16%
+Adalimumab-adaz (Hyrimoz),TNF-alpha Biosimilar,0,0,0,0,0,0,1591.81,0,N/A
+Adalimumab-adbm (Cyltezo),TNF-alpha Biosimilar,0,0,0,0,0,0,636.17,0,N/A
+Cosentyx,IL-17 Inhibitor,17114.0,6644,65055252.95,63327132.31,43066710.64,86133421.28,3950.77,3801.4,32.40%
+Steqeyma,IL-12/23 Biosimilar,0,0,0,0,0,0,0,0,N/A
+Taltz,IL-17 Inhibitor,1172.0,1010,7921126.57,7671585.48,4306970.66,8613941.32,7020.13,6758.64,8.75%
+Starjemza,IL-12/23 Biosimilar,0,0,0,0,0,0,0,0,N/A
+Tyenne,IL-6 Inhibitor,0,0,0,0,0,0,819.74,0,N/A
+Skytrofa,Growth Hormone,3012.0,717,5247793.32,5183386.1,3645295.07,7290590.14,0,1742.3,38.93%
+Ebglyss,IL-13 Inhibitor (Atopic Dermatitis),0,0,0,0,399546.54,799093.08,1795.81,0,N/A
+Wegovy Tablet,GLP-1 Weight Management,76612.0,35262,46477820.73,45854241.98,156754689.18,313509378.36,650.85,606.66,574.54%
+Vtama,Topical (Psoriasis),7560.0,126,174929.84,167701.04,446739.77,893479.54,24.12,23.14,410.76%
+Stelara,,5580.0,2482,61607303.42,59748328.67,36923767.59,73847535.18,28375.76,11041.04,19.87%
+Actemra,,9108.0,954,3224265.66,2978884.65,2072372.9,4144745.8,1279.06,354.0,28.55%
+Simlandi,,0,0,0,0,0,0,482.88,0,N/A
+Yusimry,,0,0,0,0,0,0,604.15,0,N/A
+Hadlima,,14.0,13,18182.44,16018.55,46530.76,93061.52,1259.05,1262.67,411.82%
+Dupixent,,120868.0,33279,126133368.03,123128538.6,80313927.13,160627854.26,1009.96,1043.56,27.35%
+
+HUMIRA BIOSIMILAR ADOPTION SCENARIOS
+Scenario,SFY26 Gross Savings,SFY27 Gross Savings,SFY26 State Savings,SFY27 State Savings,2-Year State Total
+Conservative,3365928.25,44766845.74,1190865.42,16044437.51,17235302.93
+Moderate,6731856.5,67318565.02,2381730.83,24126973.7,26508704.53
+Aggressive,10097784.75,87514134.52,3572596.25,31365065.81,34937662.06
+
+HUMIRA ADOPTION BY QUARTER (MODERATE SCENARIO)
+Quarter,Biosimilar %
+SFY26_Q1,0%
+SFY26_Q2,0%
+SFY26_Q3,0%
+SFY26_Q4,20%
+SFY27_Q1,35%
+SFY27_Q2,45%
+SFY27_Q3,55%
+SFY27_Q4,65%
+
+THERAPEUTIC SWAP ANALYSIS
+Category,From Drug,To Drug,From NADAC,To NADAC,Discount %,CY2024 Baseline,Savings @25%,Savings @50%,Savings @75%
+IL-17 (Psoriasis/SpA),Cosentyx,Taltz,3950.77,7020.13,TBD,65055252.95,0,0,0
+IL-12/23 (Ustekinumab),Stelara,Starjemza,28375.76,0,TBD,61607303.42,0,0,0
+IL-6 (Tocilizumab/RA),Actemra,Tyenne,1279.06,819.74,35.9%,3224265.66,289460.78,578921.55,868382.33
+GLP-1 Weight Management,Wegovy Injectable,Wegovy Tablet,650.89,43.02,93.4%,46477820.73,10851540.59,21703081.17,32554621.76
+
+FMAP AND STATE SHARE
+SFY,FMAP (Non-Exp),State Share (Non-Exp),FMAP (Exp),State Share (Exp)
+SFY25,0.6506,0.3494,0.9,0.1
+SFY26,0.6462,0.3538,0.9,0.1
+SFY27,0.6416,0.3584,0.9,0.1
+
+IMPLEMENTATION RISKS
+Risk,Severity,Description
+Claims System Lag,High,"PDL effective 04/01, but claims system not updated until 04/03/2026. Two-day window of incorrect adjudication."
+PA Criteria Gap,Critical,NC DHB has not updated Humira PA criteria to require biosimilar trial/failure first (as done for Stelara). Plans cannot enforce non-preferred status without updated PA criteria.
+Member Notification,High,"PHPs received notification on 04/01 at 2:24 PM, formal notice on 04/02 at 9:30 AM. No time for required member notification on complex medication changes."
+Existing PA Management,Medium,Request to end-date existing Humira PAs on 03/31/2026 to force conversion. Abrupt PA termination for established specialty drug patients raises clinical transition concerns.
+
+KEY ASSUMPTIONS
+All estimates are GROSS reimbursement (pre-rebate)
+Humira MDRP base rebate: ~23.1% + CPI penalties
+"Biosimilar rebates: ~13%, minimal CPI penalties"
+Non-expansion FMAP used as conservative state share estimate
+PA enforcement assumed for adoption scenarios
+SDU 2025 data covers Q1-Q2 only

@@ -206,6 +206,36 @@ class CmsMedicaidClient:
 
         return output_path
 
+    def download_with_progress(
+        self,
+        url: str,
+        output_path: Path,
+        progress,
+        task_id,
+    ) -> Path:
+        """Download a file with rich progress bar integration.
+
+        Args:
+            url: URL of the file to download.
+            output_path: Where to save the file.
+            progress: A rich.progress.Progress instance.
+            task_id: The rich progress task ID to update.
+
+        Returns:
+            Path to the downloaded file.
+        """
+        with self._client.stream("GET", url) as response:
+            response.raise_for_status()
+            total = int(response.headers.get("content-length", 0))
+            progress.update(task_id, total=total or None)
+
+            with open(output_path, "wb") as f:
+                for chunk in response.iter_bytes(chunk_size=8192):
+                    f.write(chunk)
+                    progress.update(task_id, advance=len(chunk))
+
+        return output_path
+
     def list_themes(self) -> list[str]:
         """Get all unique themes/categories across datasets.
 

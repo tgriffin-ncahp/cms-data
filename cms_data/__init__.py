@@ -9,6 +9,7 @@ Example usage:
 """
 
 from .api import CmsMedicaidClient
+from .loader import create_indexes, load_nadac, load_sdu, make_engine
 from .models import Catalog, ContactPoint, Dataset, Distribution, Publisher
 
 __all__ = [
@@ -18,6 +19,10 @@ __all__ = [
     "Distribution",
     "Publisher",
     "ContactPoint",
+    "load_sdu",
+    "load_nadac",
+    "create_indexes",
+    "make_engine",
 ]
 
 __version__ = "0.1.0"
